@@ -16,7 +16,7 @@
 #include "bng.h"
 #include "caml/config.h"
 
-#if defined(__GNUC__) && BNG_ASM_LEVEL > 0
+#if defined(__GNUC__)
 #if defined(BNG_ARCH_ia32)
 #include "bng_ia32.c"
 #elif defined(BNG_ARCH_amd64)
