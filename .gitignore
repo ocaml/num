@@ -1,0 +1,10 @@
+*.o
+*.a
+*.so
+*.obj
+*.lib
+*.dll
+*.cm[ioxat]
+*.cmx[as]
+*.cmti
+*.annot

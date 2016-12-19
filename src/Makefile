@@ -4,8 +4,9 @@ OCAMLDEP=ocamldep
 OCAMLMKLIB=ocamlmklib
 OCAMLFIND=ocamlfind
 INSTALL=install
+STDLIBDIR=$(shell $(OCAMLC) -where)
 
-include $(shell $(OCAMLC) -where)/Makefile.config
+include $(STDLIBDIR)/Makefile.config
 
 ifeq "$(ARCH)" "i386"
 BNG_ARCH=ia32
@@ -68,40 +69,31 @@ nat_stubs.$(O): bng.h nat.h
 %.$(O): %.c
 	$(OCAMLC) -ccopt -DBNG_ARCH_$(BNG_ARCH) -c $*.c
 
-# Files to install
+# Legacy installation: files go into OCaml's stdlib directory; only META
+# is installed via findlib
 
 TOINSTALL=nums.cma libnums.$(A) $(CMIS) $(CMIS:.cmi=.mli) $(CMIS:.cmi=.cmti)
 ifneq "$(ARCH)" "none"
-TOINSTALL+=nums.cmxa nums.$(A) $(CMXS)
+TOINSTALL+=nums.cmxa nums.$(A)
 endif
 ifeq "$(NATDYNLINK)" "true"
 TOINSTALL+=nums.cmxs
 endif
-ifeq "$(SUPPORTS_SHARED_LIBRARIES)" "true"
 TOINSTALL_STUBS=dllnums.$(SO)
-else
-TOINSTALL_STUBS=
+
+install:
+	$(OCAMLFIND) install num META
+	$(INSTALL) $(TOINSTALL) $(STDLIBDIR)
+ifeq "$(SUPPORTS_SHARED_LIBRARIES)" "true"
+	$(INSTALL) $(TOINSTALL_STUBS) $(STDLIBDIR)/stublibs
 endif
 
-# Installation via ocamlfind
-
-install-ocamlfind:
-	$(OCAMLFIND) install num ../META $(TOINSTALL) $(TOINSTALL_STUBS)
-
-uninstall-ocamlfind:
+uninstall:
+	cd $(STDLIBDIR) && rm -f $(TOINSTALL)
+ifeq "$(SUPPORTS_SHARED_LIBRARIES)" "true"
+	cd $(STDLIBDIR)/stublibs && rm -f $(TOINSTALL_STUBS) 
+endif
 	$(OCAMLFIND) remove num
-
-# Legacy installation straight into the master lib/ directory
-
-LIBDIR=$(shell $(OCAMLC) -where)
-
-install-legacy:
-	$(INSTALL) $(TOINSTALL) '$(LIBDIR)'
-	$(INSTALL) $(TOINSTALL_STUBS) '$(LIBDIR)/stublibs'
-
-uninstall-legacy:
-	cd '$(LIBDIR)' && rm -f $(TOINSTALL)
-	cd '$(LIBDIR)/stublibs' && rm -f $(TOINSTALL_STUBS) 
 
 clean:
 	rm -f *.cm[ioxta] *.cmx[as] *.cmti *.$(O) *.$(A) *.$(SO)

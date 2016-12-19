@@ -16,6 +16,9 @@ of the GNU Lesser General Public License.  This exception does not
 however invalidate any other reasons why the executable file might be
 covered by the GNU Lesser General Public License.
 
+The files in directory toplevel/ are taken from findlib and are covered by
+the license in file toplevel/LICENSE-findlib.
+
 ----------------------------------------------------------------------
 
 GNU LESSER GENERAL PUBLIC LICENSE

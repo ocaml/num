@@ -1,17 +1,19 @@
-OCAMLC=ocamlc
-LIBDIR=$(shell $(OCAMLC) -where)
-
 all:
 	$(MAKE) -C src all
+	$(MAKE) -C toplevel all
 
 test:
 	$(MAKE) -C test test
 
-# This is the legacy installation: straight into the master lib/ directory
-# TODO: ocamlfind support
-install-legacy:
-	$(MAKE) -C src install-legacy
-
 clean:
 	$(MAKE) -C src clean
+	$(MAKE) -C toplevel clean
 	$(MAKE) -C test clean
+
+install:
+	$(MAKE) -C src install
+	$(MAKE) -C toplevel install
+
+uninstall:
+	$(MAKE) -C src uninstall
+	$(MAKE) -C toplevel uninstall
