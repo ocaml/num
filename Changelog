@@ -3,3 +3,4 @@ Initialization (2016-12-08):
 - Initial import of the sources and test suite from the core OCaml system,
   version 4.04.
 - Restructure as independent project with standalone Makefiles.
+- Integrate findlib support, including printers for toplevel use.

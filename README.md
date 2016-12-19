@@ -4,22 +4,26 @@
 
 This library implements arbitrary-precision arithmetic on big integers and on rationals.  
 
-This is a  legacy library.  It used to be part of the core OCaml distribution (in <code>otherlibs/num</code>) but is now distributed separately.  New applications that need arbitrary-precision arithmetic should use the Zarith library (https://forge.ocamlcore.org/projects/zarith) instead of the Num library, and older applications that already use Num are encouraged to switch to Zarith.  Zarith delivers much better performance than Num and has a nicer API.
+This is a  legacy library.  It used to be part of the core OCaml distribution (in <code>otherlibs/num</code>) but is now distributed separately.  New applications that need arbitrary-precision arithmetic should use the Zarith library (https://github.com/ocaml/Zarith) instead of the Num library, and older applications that already use Num are encouraged to switch to Zarith.  Zarith delivers much better performance than Num and has a nicer API.
 
 ## Usage
 
 To use the bignum library from your programs, it is recommended to use ocamlfind:
 ```
-    ocamlfind ocamlc -pkg num ...
-    ocamlfind ocamlopt -pkg num ...
-    ocamlfind ocaml -pkg num
+    ocamlfind ocamlc -package num ...
+    ocamlfind ocamlopt -package num ...
 ```
-Alternatively and with the legacy installation only, you can do
+Alternatively, you can do
 ```
     ocamlc <options> nums.cma <.cmo and .ml files>
     ocamlopt <options> nums.cmxa <.cmx and .ml files>
 ```
-for the linking phase.  For toplevel use, just issue the command
+For toplevel use, just issue the commands
+```
+    #use "topfind";;
+    #package "num";;
+```
+or
 ```
     #load "nums.cma";;
 ```
@@ -40,7 +44,7 @@ Prerequisites: OCaml version 4.04 or newer.
 ```
         make all
         make test
-        make install   # fixme
+        make install
         make clean
 ```
 

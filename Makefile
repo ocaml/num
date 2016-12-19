@@ -3,7 +3,7 @@ all:
 	$(MAKE) -C toplevel all
 
 test:
-	$(MAKE) -C test test
+	$(MAKE) -C test all
 
 clean:
 	$(MAKE) -C src clean
@@ -17,3 +17,5 @@ install:
 uninstall:
 	$(MAKE) -C src uninstall
 	$(MAKE) -C toplevel uninstall
+
+.PHONY: all test clean install uninstall
