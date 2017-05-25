@@ -53,7 +53,7 @@ nums.cmxa: $(CMXS)
 	$(OCAMLMKLIB) -o nums -oc nums -linkall $(CMXS)
 
 nums.cmxs: nums.cmxa libnums.$(A)
-	$(OCAMLOPT) $(CAMLOPTFLAGS) -shared -o nums.cmxs nums.cmxa
+	$(OCAMLOPT) $(CAMLOPTFLAGS) -I . -shared -o nums.cmxs nums.cmxa
 
 # We hard-code the C dependencies rather than having them generated
 # because the dependencies are so simple.
