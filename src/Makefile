@@ -3,7 +3,8 @@ OCAMLOPT=ocamlopt
 OCAMLDEP=ocamldep
 OCAMLMKLIB=ocamlmklib
 OCAMLFIND=ocamlfind
-INSTALL=install
+INSTALL_DATA=install -m 644
+INSTALL_DLL=install
 STDLIBDIR=$(shell $(OCAMLC) -where)
 
 include $(STDLIBDIR)/Makefile.config
@@ -74,7 +75,7 @@ nat_stubs.$(O): bng.h nat.h
 
 TOINSTALL=nums.cma libnums.$(A) $(CMIS) $(CMIS:.cmi=.mli) $(CMIS:.cmi=.cmti)
 ifneq "$(ARCH)" "none"
-TOINSTALL+=nums.cmxa nums.$(A)
+TOINSTALL+=nums.cmxa nums.$(A) $(CMIS:.cmi=.cmx)
 endif
 ifeq "$(NATDYNLINK)" "true"
 TOINSTALL+=nums.cmxs
@@ -83,9 +84,9 @@ TOINSTALL_STUBS=dllnums.$(SO)
 
 install:
 	$(OCAMLFIND) install num META
-	$(INSTALL) $(TOINSTALL) $(STDLIBDIR)
+	$(INSTALL_DATA) $(TOINSTALL) $(STDLIBDIR)
 ifeq "$(SUPPORTS_SHARED_LIBRARIES)" "true"
-	$(INSTALL) $(TOINSTALL_STUBS) $(STDLIBDIR)/stublibs
+	$(INSTALL_DLL) $(TOINSTALL_STUBS) $(STDLIBDIR)/stublibs
 endif
 
 uninstall:

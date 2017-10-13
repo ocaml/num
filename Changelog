@@ -1,3 +1,9 @@
+Release 1.1 (2017-10-13):
+
+- Install .cmx files as well.
+- Fix permissions on installed files.
+- Make tests compatible with safe strings.
+
 Release 1.0 (2017-06-04):
 
 - Fix build rule for nums.cmxs.
