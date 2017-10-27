@@ -7,7 +7,6 @@ requires(toploop) = "num.core,num-top"
 version = "1.0"
 description = "Arbitrary-precision rational arithmetic"
 package "core" (
-  directory = "^"
   version = "1.0"
   browse_interfaces = ""
   archive(byte) = "nums.cma"
