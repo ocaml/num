@@ -83,10 +83,10 @@ endif
 TOINSTALL_STUBS=dllnums.$(SO)
 
 install:
-	$(OCAMLFIND) install num META
-	$(INSTALL_DATA) $(TOINSTALL) $(STDLIBDIR)
+	$(OCAMLFIND) install num META $(TOINSTALL)
 ifeq "$(SUPPORTS_SHARED_LIBRARIES)" "true"
-	$(INSTALL_DLL) $(TOINSTALL_STUBS) $(STDLIBDIR)/stublibs
+	$(INSTALL_DLL) -d $(shell ocamlfind printconf destdir)/stublibs/
+	$(INSTALL_DLL) $(TOINSTALL_STUBS) $(shell ocamlfind printconf destdir)/stublibs/
 endif
 
 uninstall:
