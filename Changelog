@@ -1,3 +1,6 @@
+- Issue#4: wrong DLL file names for Win32 ports, causing errors at
+  installation time.
+
 Release 1.1 (2017-10-13):
 
 - Install .cmx files as well.

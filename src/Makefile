@@ -80,7 +80,7 @@ endif
 ifeq "$(NATDYNLINK)" "true"
 TOINSTALL+=nums.cmxs
 endif
-TOINSTALL_STUBS=dllnums.$(SO)
+TOINSTALL_STUBS=dllnums$(EXT_DLL)
 
 install:
 	$(OCAMLFIND) install num META
@@ -97,7 +97,7 @@ endif
 	$(OCAMLFIND) remove num
 
 clean:
-	rm -f *.cm[ioxta] *.cmx[as] *.cmti *.$(O) *.$(A) *.$(SO)
+	rm -f *.cm[ioxta] *.cmx[as] *.cmti *.$(O) *.$(A) *$(EXT_DLL)
 
 depend:
 	$(OCAMLDEP) -slash *.mli *.ml > .depend
