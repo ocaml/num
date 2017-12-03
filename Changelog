@@ -1,3 +1,5 @@
+- Issue#3: make sur the stublibs/ directory exists before installing DLLs 
+  inside it.
 - Issue#4: wrong DLL file names for Win32 ports, causing errors at
   installation time.
 

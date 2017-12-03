@@ -5,6 +5,7 @@ OCAMLMKLIB=ocamlmklib
 OCAMLFIND=ocamlfind
 INSTALL_DATA=install -m 644
 INSTALL_DLL=install
+INSTALL_DIR=install -d
 STDLIBDIR=$(shell $(OCAMLC) -where)
 
 include $(STDLIBDIR)/Makefile.config
@@ -86,6 +87,7 @@ install:
 	$(OCAMLFIND) install num META
 	$(INSTALL_DATA) $(TOINSTALL) $(STDLIBDIR)
 ifeq "$(SUPPORTS_SHARED_LIBRARIES)" "true"
+	$(INSTALL_DIR) $(STDLIBDIR)/stublibs
 	$(INSTALL_DLL) $(TOINSTALL_STUBS) $(STDLIBDIR)/stublibs
 endif
 
