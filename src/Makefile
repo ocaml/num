@@ -84,18 +84,13 @@ endif
 TOINSTALL_STUBS=dllnums$(EXT_DLL)
 
 install:
-	$(OCAMLFIND) install num META
-	$(INSTALL_DATA) $(TOINSTALL) $(STDLIBDIR)
 ifeq "$(SUPPORTS_SHARED_LIBRARIES)" "true"
-	$(INSTALL_DIR) $(STDLIBDIR)/stublibs
-	$(INSTALL_DLL) $(TOINSTALL_STUBS) $(STDLIBDIR)/stublibs
+	$(OCAMLFIND) install num META $(TOINSTALL) $(TOINSTALL_STUBS)
+else
+	$(OCAMLFIND) install num META $(TOINSTALL)
 endif
 
 uninstall:
-	cd $(STDLIBDIR) && rm -f $(TOINSTALL)
-ifeq "$(SUPPORTS_SHARED_LIBRARIES)" "true"
-	cd $(STDLIBDIR)/stublibs && rm -f $(TOINSTALL_STUBS) 
-endif
 	$(OCAMLFIND) remove num
 
 clean:
