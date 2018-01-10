@@ -81,22 +81,35 @@ endif
 ifeq "$(NATDYNLINK)" "true"
 TOINSTALL+=nums.cmxs
 endif
+ifeq "$(SUPPORTS_SHARED_LIBRARIES)" "true"
 TOINSTALL_STUBS=dllnums$(EXT_DLL)
+else
+TOINSTALL_STUBS=
+endif
 
 install:
+	cp META.in META
 	$(OCAMLFIND) install num META
+	rm -f META
 	$(INSTALL_DATA) $(TOINSTALL) $(STDLIBDIR)
 ifeq "$(SUPPORTS_SHARED_LIBRARIES)" "true"
 	$(INSTALL_DIR) $(STDLIBDIR)/stublibs
 	$(INSTALL_DLL) $(TOINSTALL_STUBS) $(STDLIBDIR)/stublibs
 endif
 
-uninstall:
+findlib-install:
+	grep -Fv '^' META.in > META
+	$(OCAMLFIND) install num META $(TOINSTALL) $(TOINSTALL_STUBS)
+	rm -f META
+
+findlib-uninstall:
+	$(OCAMLFIND) remove num
+
+uninstall: findlib-uninstall
 	cd $(STDLIBDIR) && rm -f $(TOINSTALL)
 ifeq "$(SUPPORTS_SHARED_LIBRARIES)" "true"
 	cd $(STDLIBDIR)/stublibs && rm -f $(TOINSTALL_STUBS) 
 endif
-	$(OCAMLFIND) remove num
 
 clean:
 	rm -f *.cm[ioxta] *.cmx[as] *.cmti *.$(O) *.$(A) *$(EXT_DLL)
