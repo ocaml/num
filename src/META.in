@@ -1,6 +1,8 @@
 # This META is the one provided by findlib when the "num" library was
 # part of the core OCaml distribution.  For backward compatibility,
-# it installs into OCaml's standard library directory, not in a subdirectory
+# it is installed into OCaml's standard library directory. If the
+# directory line below is removed, then it's installed in a
+# subdirectory, as normal for a findlib package.
 
 requires = "num.core"
 requires(toploop) = "num.core,num-top"

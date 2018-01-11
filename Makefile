@@ -14,8 +14,16 @@ install:
 	$(MAKE) -C src install
 	$(MAKE) -C toplevel install
 
+findlib-install:
+	$(MAKE) -C src findlib-install
+	$(MAKE) -C toplevel install
+
 uninstall:
 	$(MAKE) -C src uninstall
 	$(MAKE) -C toplevel uninstall
 
-.PHONY: all test clean install uninstall
+findlib-uninstall:
+	$(MAKE) -C src findlib-uninstall
+	$(MAKE) -C toplevel uninstall
+
+.PHONY: all test clean install uninstall findlib-install findlib-uninstall
