@@ -76,7 +76,7 @@ nat_stubs.$(O): bng.h nat.h
 
 TOINSTALL=nums.cma libnums.$(A) $(CMIS) $(CMIS:.cmi=.mli) $(CMIS:.cmi=.cmti)
 ifneq "$(ARCH)" "none"
-TOINSTALL+=nums.cmxa nums.$(A) $(CMIS:.cmi=.cmx)
+TOINSTALL+=nums.cmxa nums.$(A) $(CMXS)
 endif
 ifeq "$(NATDYNLINK)" "true"
 TOINSTALL+=nums.cmxs
