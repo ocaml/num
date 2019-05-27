@@ -990,7 +990,7 @@ test 5 eq_float (float_of_big_int (shift_left_big_int unit_big_int 1023),
                  ldexp 1.0 1023);;
 (* Some random int64 values *)
 let ok = ref true in
-for i = 1 to 100 do
+for _ = 1 to 100 do
   let n = Random.int64 Int64.max_int in
   if not (eq_float (float_of_big_int (big_int_of_int64 n)) (Int64.to_float n))
   then ok := false;
@@ -1001,7 +1001,7 @@ done;
 test 6 eq (!ok, true);;
 (* Some random int64 values scaled by some random power of 2 *)
 let ok = ref true in
-for i = 1 to 1000 do
+for _ = 1 to 1000 do
   let n = Random.int64 Int64.max_int in
   let exp = Random.int 1200 in
   if not (eq_float

@@ -1,9 +1,7 @@
 open Test;;
-open Nat;;
 open Big_int;;
 open Ratio;;
 open Num;;
-open Arith_status;;
 
 testing_function "add_num";;
 
