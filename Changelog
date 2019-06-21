@@ -1,7 +1,11 @@
-- GPR#6: provide findlib-install target to install everything using ocamlfind
-- Issue#3: make sur the stublibs/ directory exists before installing DLLs 
+Release 1.2 (2019-06-21)
+
+- Issue #9: install all .cmx files.
+- Pull request #6: provide findlib-install target to install everything
+  using ocamlfind.
+- Issue #3: make sur the stublibs/ directory exists before installing DLLs
   inside it.
-- Issue#4: wrong DLL file names for Win32 ports, causing errors at
+- Issue #4: wrong DLL file names for Win32 ports, causing errors at
   installation time.
 
 Release 1.1 (2017-10-13):
