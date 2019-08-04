@@ -7,6 +7,7 @@ INSTALL_DATA=install -m 644
 INSTALL_DLL=install
 INSTALL_DIR=install -d
 STDLIBDIR=$(shell $(OCAMLC) -where)
+DESTDIR ?=
 
 include $(STDLIBDIR)/Makefile.config
 
@@ -88,13 +89,14 @@ TOINSTALL_STUBS=
 endif
 
 install:
+	$(INSTALL_DIR) $(DESTDIR)$(STDLIBDIR)
 	cp META.in META
 	$(OCAMLFIND) install num META
 	rm -f META
-	$(INSTALL_DATA) $(TOINSTALL) $(STDLIBDIR)
+	$(INSTALL_DATA) $(TOINSTALL) $(DESTDIR)$(STDLIBDIR)
 ifeq "$(SUPPORTS_SHARED_LIBRARIES)" "true"
-	$(INSTALL_DIR) $(STDLIBDIR)/stublibs
-	$(INSTALL_DLL) $(TOINSTALL_STUBS) $(STDLIBDIR)/stublibs
+	$(INSTALL_DIR) $(DESTDIR)$(STDLIBDIR)/stublibs
+	$(INSTALL_DLL) $(TOINSTALL_STUBS) $(DESTDIR)$(STDLIBDIR)/stublibs
 endif
 
 findlib-install:
@@ -106,9 +108,9 @@ findlib-uninstall:
 	$(OCAMLFIND) remove num
 
 uninstall: findlib-uninstall
-	cd $(STDLIBDIR) && rm -f $(TOINSTALL)
+	cd $(DESTDIR)$(STDLIBDIR) && rm -f $(TOINSTALL)
 ifeq "$(SUPPORTS_SHARED_LIBRARIES)" "true"
-	cd $(STDLIBDIR)/stublibs && rm -f $(TOINSTALL_STUBS) 
+	cd $(DESTDIR)$(STDLIBDIR)/stublibs && rm -f $(TOINSTALL_STUBS)
 endif
 
 clean:
