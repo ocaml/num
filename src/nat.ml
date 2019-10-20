@@ -235,9 +235,9 @@ let sqrt_nat rad off len =
     shift_cand is word_size - nbb *)
  let shift_cand =
    ((num_leading_zero_bits_in_digit rad (len-1)) +
-     Sys.word_size * len_parity) / 2 in
+     length_of_digit * len_parity) / 2 in
  (* All radicand bits are zeroed, we give back 0. *)
- if shift_cand = Sys.word_size then cand else
+ if shift_cand = length_of_digit then cand else
  begin
   complement_nat cand 0 cand_len;
   shift_right_nat cand 0 1 a_1 0 shift_cand;
