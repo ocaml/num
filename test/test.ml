@@ -82,7 +82,7 @@ let eq_int32 (i: int32) (j: int32) = (i = j);;
 let eq_int64 (i: int64) (j: int64) = (i = j);;
 let eq_float (x: float) (y: float) = Pervasives.compare x y = 0;;
 
-let sixtyfour = (1 lsl 31) <> 0;;
+let sixtyfour = Sys.int_size > 32
 
 let rec gcd_int i1 i2 =
   if i2 = 0 then abs i1 else gcd_int i2 (i1 mod i2);;
@@ -94,7 +94,7 @@ let num_bits_int n = num_bits_int_aux (abs n);;
 
 let sign_int i = if i = 0 then 0 else if i > 0 then 1 else -1;;
 
-let length_of_int = Sys.word_size - 2;;
+let length_of_int = Sys.int_size - 1;;
 
 let monster_int = 1 lsl length_of_int;;
 let biggest_int = monster_int - 1;;
