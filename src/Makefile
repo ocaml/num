@@ -11,16 +11,11 @@ DESTDIR ?=
 
 include $(STDLIBDIR)/Makefile.config
 
-ifeq "$(ARCH)" "i386"
-BNG_ARCH=ia32
-else ifeq "$(ARCH)" "amd64"
-BNG_ARCH=amd64
-else ifeq "$(ARCH)" "arm64"
-BNG_ARCH=arm64
-else ifeq "$(ARCH)" "power"
-BNG_ARCH=ppc
-else
+ifeq "$(filter i386 amd64 arm64 power,$(ARCH))" ""
+# Unsupported architecture
 BNG_ARCH=generic
+else
+BNG_ARCH=$(ARCH)
 endif
 
 CAMLCFLAGS=-w +a-4-9-41-42-44-45-48 -warn-error A -bin-annot -g \
