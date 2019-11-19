@@ -1,3 +1,9 @@
+Release Next
+
+- Pull request #16: use Sys.word_size and Sys.int_size more consistently
+  (fixes js_of_ocaml)
+- Pull request #15: support DESTDIR in install target
+
 Release 1.2 (2019-06-21)
 
 - Issue #9: install all .cmx files.
