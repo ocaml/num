@@ -83,9 +83,11 @@ else
 TOINSTALL_STUBS=
 endif
 
+VERSION=$(shell sed -ne 's/^ *version *: *"\([^"]*\)".*$$/\1/p' ../num.opam)
+
 install:
 	$(INSTALL_DIR) $(DESTDIR)$(STDLIBDIR)
-	cp META.in META
+	sed -e 's/%%VERSION%%/$(VERSION)/g' META.in > META
 	$(OCAMLFIND) install num META
 	rm -f META
 	$(INSTALL_DATA) $(TOINSTALL) $(DESTDIR)$(STDLIBDIR)
@@ -95,7 +97,7 @@ ifeq "$(SUPPORTS_SHARED_LIBRARIES)" "true"
 endif
 
 findlib-install:
-	grep -Fv '^' META.in > META
+	sed -e '/\^/d' -e 's/%%VERSION%%/$(VERSION)/g' META.in > META
 	$(OCAMLFIND) install num META $(TOINSTALL) $(TOINSTALL_STUBS)
 	rm -f META
 
