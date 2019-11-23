@@ -438,7 +438,7 @@ let approx_ratio_fix n r =
                    (base_power_big_int
                        10 (succ n) (abs_big_int r.numerator))
                    r.denominator)) in
-       let s1 = Bytes.unsafe_of_string s1 in
+       let s1 = Bytes.of_string s1 in
        (* Round up and add 1 in front if needed *)
        let s2 =
          if round_futur_last_digit s1 0 (Bytes.length s1)
@@ -508,7 +508,7 @@ let approx_ratio_exp n r =
                                 10 k (abs_big_int r.numerator))
                                r.denominator) in
        string_of_nat nat) in
-     let s = Bytes.unsafe_of_string s in
+     let s = Bytes.of_string s in
      if round_futur_last_digit s 0 (Bytes.length s)
       then
        let m = num_decimal_digits_int (succ msd) in
