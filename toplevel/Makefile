@@ -3,7 +3,7 @@ OCAMLDEP=ocamldep
 OCAMLFIND=ocamlfind
 
 CAMLCFLAGS=-I ../src -I +compiler-libs \
-           -w +a-4-9-41-42-44-45-48 -warn-error A \
+           -w +a-4-9-41-42-44-45-48 -warn-error +A \
            -safe-string -strict-sequence -strict-formats
 
 CMOS=num_top_printers.cmo num_top.cmo
