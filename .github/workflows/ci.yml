@@ -1,0 +1,65 @@
+name: CI
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      # Test Linux, macOS and Windows with the oldest and newest supported OCaml
+      # and trunk.
+      matrix:
+        os:
+          - macos-latest
+          - ubuntu-latest
+          - windows-latest
+        ocaml-version:
+          - 4.06.1
+          - 4.12.0
+          - 4.13.0+trunk
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set-up OCaml ${{ matrix.ocaml-version }}
+        id: ocaml
+        uses: avsm/setup-ocaml@v1
+        with:
+          ocaml-version: ${{ matrix.ocaml-version }}
+        continue-on-error: ${{ contains(matrix.ocaml-version, '+trunk') }}
+
+      # Dune (may fail with trunk)
+      - name: Install dune, if possible
+        id: dune
+        run: opam install dune
+        if: steps.ocaml.outcome == 'success'
+        continue-on-error: ${{ contains(matrix.ocaml-version, '+trunk') }}
+
+      # Dependencies
+      - run: opam install . --deps-only --with-doc --with-test
+        if: steps.ocaml.outcome == 'success'
+      - run: opam pin add num . --no-action
+        if: steps.ocaml.outcome == 'success'
+
+      # Check building with make
+      - run: opam exec -- make
+        if: steps.ocaml.outcome == 'success'
+      - run: opam exec -- make test
+        if: steps.ocaml.outcome == 'success'
+      - run: opam exec -- make clean
+        if: steps.ocaml.outcome == 'success'
+
+      # Check building with dune
+      - run: opam exec -- dune build @install
+        if: steps.dune.outcome == 'success'
+      - run: opam exec -- dune runtest
+        if: steps.dune.outcome == 'success'
+      - run: opam exec -- dune clean
+        if: steps.dune.outcome == 'success'
+
+      # Check installing with opam
+      - run: opam install num
+        if: steps.ocaml.outcome == 'success'
