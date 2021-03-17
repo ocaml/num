@@ -12,6 +12,7 @@ bug-reports: "https://github.com/ocaml/num/issues"
 dev-repo: "git+https://github.com/ocaml/num.git"
 build: [
   [make]
+  [make "test"] {with-test}
 ]
 install: [
   make
