@@ -1,7 +1,16 @@
 (alias
   (name runtest)
-  (action (progn (run %{dep:test.bc}) (run %{dep:test.exe}))))
+  (action (progn (run %{dep:driver.bc}) (run %{dep:driver.exe}))))
+
+(library
+  (name test_lib)
+  (modules test test_nats test_big_ints test_ratios test_nums test_io end_test)
+  (libraries num))
 
 (executable
-  (name test)
-  (libraries num))
+  (name driver)
+  (modules driver)
+  (flags -linkall)
+  (libraries test_lib))
+
+(rule (with-stdout-to driver.ml (echo "")))
