@@ -1,3 +1,10 @@
+Release Next
+
+- Pull request #22: use `-warn-error +A` instead of `-warn-error A` to avoid
+  deprecation alert in 4.13.
+- Pull request #23: fix the testsuite dune file and allow running the
+  testsuite via opam.
+
 Release 1.4 (2020-11-09)
 
 - Pull request #20: fix bug caused by unsafe string/bytes conversions,
