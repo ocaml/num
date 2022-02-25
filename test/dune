@@ -1,5 +1,5 @@
-(alias
-  (name runtest)
+(rule
+  (alias runtest)
   (action (progn (run %{dep:driver.bc}) (run %{dep:driver.exe}))))
 
 (library
@@ -11,6 +11,7 @@
   (name driver)
   (modules driver)
   (flags -linkall)
+  (modes (byte exe))
   (libraries test_lib))
 
 (rule (with-stdout-to driver.ml (echo "")))
