@@ -1,6 +1,10 @@
 (rule
-  (alias runtest)
-  (action (progn (run %{dep:driver.bc}) (run %{dep:driver.exe}))))
+ (alias runtest)
+ (action (run ./driver.exe)))
+
+(rule
+ (alias runtest)
+ (action (run ./driver.bc)))
 
 (library
   (name test_lib)
