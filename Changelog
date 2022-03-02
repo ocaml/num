@@ -4,6 +4,9 @@ Release Next
   deprecation alert in 4.13.
 - Pull request #23: fix the testsuite dune file and allow running the
   testsuite via opam.
+- Pull request #25: remove all uses of globally-allocated, mutable temporaries,
+  making the Num library thread-safe and domain-safe.
+- Issue #26, pull request #27: improve dune file. 
 
 Release 1.4 (2020-11-09)
 
