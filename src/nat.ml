@@ -75,11 +75,6 @@ let make_nat len =
   if len < 0 then invalid_arg "make_nat" else
     let res = create_nat len in set_to_zero_nat res 0 len; res
 
-(* Nat temporaries *)
-let a_2 = make_nat 2
-and a_1 = make_nat 1
-and b_2 = make_nat 2
-
 let copy_nat nat off_set length =
  let res = create_nat (length) in
   blit_nat res 0 nat off_set length;
@@ -240,7 +235,8 @@ let sqrt_nat rad off len =
  if shift_cand = length_of_digit then cand else
  begin
   complement_nat cand 0 cand_len;
-  shift_right_nat cand 0 1 a_1 0 shift_cand;
+  let tmp = create_nat 1 in
+  shift_right_nat cand 0 1 tmp 0 shift_cand;
   let next_cand = create_nat rad_len in
   (* Repeat until *)
   let rec loop () =
@@ -252,7 +248,7 @@ let sqrt_nat rad off len =
               i.e. next_cand <- cand + rad / cand *)
    ignore (add_nat next_cand cand_len cand_rest cand 0 cand_len 0);
         (* next_cand <- next_cand / 2 *)
-   shift_right_nat next_cand cand_len cand_rest a_1 0 1;
+   shift_right_nat next_cand cand_len cand_rest tmp 0 1;
    if lt_nat next_cand cand_len cand_rest cand 0 cand_len then
     begin  (* cand <- next_cand *)
      blit_nat cand 0 next_cand cand_len cand_len; loop ()
@@ -280,40 +276,8 @@ let pmax =
   | _ -> assert false
 ;;
 
-let max_superscript_10_power_in_int =
-  match length_of_digit with
-  | 64 -> 18
-  | 32 -> 9
-  | _ -> assert false
-;;
-let max_power_10_power_in_int =
-  match length_of_digit with
-  | 64 -> nat_of_int (Int64.to_int 1000000000000000000L)
-  | 32 -> nat_of_int 1000000000
-  | _ -> assert false
-;;
-
 let raw_string_of_digit nat off =
-  if is_nat_int nat off 1
-     then begin string_of_int (nth_digit_nat nat off) end
-  else begin
-       blit_nat b_2 0 nat off 1;
-       div_digit_nat a_2 0 a_1 0 b_2 0 2 max_power_10_power_in_int 0;
-       let leading_digits = nth_digit_nat a_2 0
-       and s1 = string_of_int (nth_digit_nat a_1 0) in
-       let len = String.length s1 in
-       if leading_digits < 10 then begin
-            let result = Bytes.make (max_superscript_10_power_in_int+1) '0' in
-            Bytes.set result 0 (Char.chr (48 + leading_digits));
-            String.blit s1 0 result (Bytes.length result - len) len;
-            Bytes.to_string result
-       end else begin
-            let result = Bytes.make (max_superscript_10_power_in_int+2) '0' in
-            String.blit (string_of_int leading_digits) 0 result 0 2;
-            String.blit s1 0 result (Bytes.length result - len) len;
-            Bytes.to_string result
-       end
-  end
+  Printf.sprintf "%nu" (nth_digit_nat_native nat off)
 
 (* XL: suppression de string_of_digit et de sys_string_of_digit.
    La copie est de toute facon faite dans string_of_nat, qui est le
