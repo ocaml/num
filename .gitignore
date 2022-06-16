@@ -8,11 +8,13 @@
 *.cmx[as]
 *.cmti
 *.annot
-src/META.*
+src/META.top
+src/META.modern
+src/META.legacy
 src/META
+src/num_top*.ml*
 test/test.byt
 test/test.exe
-toplevel/META
 .merlin
 _build/
 num.install
