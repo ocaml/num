@@ -6,7 +6,7 @@ CAMLCFLAGS=-I ../src -I +compiler-libs \
 
 CMOS=num_top_printers.cmo num_top.cmo
 
-all: num_top.cma
+all: num_top.cma META
 
 num_top.cma: $(CMOS)
 	$(OCAMLC) $(CAMLCFLAGS) -a -o $@ $(CMOS)
@@ -19,8 +19,11 @@ num_top.cma: $(CMOS)
 TOINSTALL=\
   num_top.cma num_top.cmi num_top_printers.cmi
 
+META: META.in
+	echo 'version = "$(VERSION)"' > $@
+	cat META.in >> $@
+
 install:
-	sed -e 's/%%VERSION%%/$(VERSION)/g' META.in > META
 	$(OCAMLFIND) install num-top META $(TOINSTALL)
 	rm -f META
 
@@ -28,7 +31,7 @@ uninstall:
 	$(OCAMLFIND) remove num-top
 
 clean:
-	rm -f *.cm[ioxta] *.cmx[as] *.cmti
+	rm -f *.cm[ioxta] *.cmx[as] *.cmti META
 
 depend:
 	$(OCAMLDEP) -slash *.mli *.ml > .depend

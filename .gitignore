@@ -8,6 +8,7 @@
 *.cmx[as]
 *.cmti
 *.annot
+src/META.*
 src/META
 test/test.byt
 test/test.exe
