@@ -27,7 +27,8 @@ SOURCES_NUM_TOP=\
   $(addsuffix .mli,$(MODULES_NUM_TOP)) $(addsuffix .ml,$(MODULES_NUM_TOP))
 CMOS_NUM_TOP=$(addsuffix .cmo,$(MODULES_NUM_TOP))
 
-all:: libnums.$(A) nums.cma num_top.cma META.legacy META.modern META.top
+all:: libnums.$(A) nums.cma num_top.cma META.legacy META.modern META.top \
+      num-legacy.install num-modern.install
 
 ifeq "$(NATIVE_COMPILER)" "true"
 all:: nums.cmxa
@@ -109,6 +110,45 @@ TOINSTALL_STUBS=
 endif
 TOINSTALL_NUM_TOP=num_top.cma $(addsuffix .cmi,$(MODULES_NUM_TOP))
 
+# Generate opam .install files for both installation modes:
+# lib_root section
+#   - num-top files (legacy and modern)
+#   - num artefacts to ocaml/ (legacy only)
+#   - dllnums.so to ocaml/stublibs/ (legacy only)
+# lib section:
+#   - num META file
+#   - num artefacts (modern only)
+# stublibs section:
+#   - dllnums.so (modern only)
+define GENERATE_INSTALL_FILE
+num-$1.install:
+	@echo 'lib_root: [' > $$@
+	@echo '  "src/META.top" {"num-top/META"}' >> $$@
+$(foreach file,$(TOINSTALL_NUM_TOP),
+	@echo '  "src/$(file)" {"num-top/$(file)"}' >> $$@)
+ifeq "$(1)" "legacy"
+$(foreach file,$(TOINSTALL),
+	@echo '  "src/$(file)" {"ocaml/$(file)"}' >> $$@)
+$(foreach file,$(TOINSTALL_STUBS),
+	@echo '  "src/$(file)" {"ocaml/stublibs/$(file)"}' >> $$@)
+endif
+	@echo ']' >> $$@
+	@echo 'lib: [' >> $$@
+	@echo '  "src/META.$(1)" {"META"}' >> $$@
+ifeq "$(1)" "modern"
+$(foreach file,$(TOINSTALL),
+	@echo '  "src/$(file)"' >> $$@)
+	@echo ']' >> $$@
+	@echo 'stublibs: [' >> $$@
+$(foreach file,$(TOINSTALL_STUBS),
+	@echo '  "src/$(file)"' >> $$@)
+endif
+	@echo ']' >> $$@
+endef
+
+$(eval $(call GENERATE_INSTALL_FILE,legacy))
+$(eval $(call GENERATE_INSTALL_FILE,modern))
+
 install: num-top-install
 	$(INSTALL_DIR) $(DESTDIR)$(STDLIBDIR)
 	cp META.legacy META
@@ -144,7 +184,8 @@ endif
 
 clean:
 	rm -f *.cm[ioxta] *.cmx[as] *.cmti *.$(O) *.$(A) *$(EXT_DLL) \
-        META.top META.legacy META.modern $(SOURCES_NUM_TOP)
+        META.top META.legacy META.modern $(SOURCES_NUM_TOP) \
+        num-legacy.install num-modern.install
 
 $(SOURCES_NUM_TOP:num_=%): $(addprefix ../toplevel/,$(SOURCES_NUM_TOP))
 	cp $^ .

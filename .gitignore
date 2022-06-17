@@ -17,4 +17,4 @@ test/test.byt
 test/test.exe
 .merlin
 _build/
-num.install
+*.install
