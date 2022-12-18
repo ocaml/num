@@ -11,6 +11,15 @@ DESTDIR ?=
 
 include $(STDLIBDIR)/Makefile.config
 
+ifeq "$(NATIVE_COMPILER)" ""
+# $(NATIVE_COMPILER) was added in 4.09: use $(ARCH) for 4.06-4.08
+ifeq "$(ARCH)" "none"
+NATIVE_COMPILER = false
+else
+NATIVE_COMPILER = true
+endif
+endif
+
 ifeq "$(filter i386 amd64 arm64 power,$(ARCH))" ""
 # Unsupported architecture
 BNG_ARCH=generic
@@ -33,7 +42,7 @@ COBJS=bng.$(O) nat_stubs.$(O)
 
 all:: libnums.$(A) nums.cma
 
-ifneq "$(ARCH)" "none"
+ifeq "$(NATIVE_COMPILER)" "true"
 all:: nums.cmxa
 endif
 
@@ -71,7 +80,7 @@ nat_stubs.$(O): bng.h nat.h
 # is installed via findlib
 
 TOINSTALL=nums.cma libnums.$(A) $(CMIS) $(CMIS:.cmi=.mli) $(CMIS:.cmi=.cmti)
-ifneq "$(ARCH)" "none"
+ifeq "$(NATIVE_COMPILER)" "true"
 TOINSTALL+=nums.cmxa nums.$(A) $(CMXS)
 endif
 ifeq "$(NATDYNLINK)" "true"
