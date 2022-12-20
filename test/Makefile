@@ -1,8 +1,4 @@
-OCAMLC=ocamlc
-OCAMLOPT=ocamlopt
-OCAMLRUN=ocamlrun
-
-include $(shell $(OCAMLC) -where)/Makefile.config
+include ../Makefile.common
 
 CAMLCFLAGS=
 CAMLOPTFLAGS=$(CAMLCFLAGS)

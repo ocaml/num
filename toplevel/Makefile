@@ -1,6 +1,4 @@
-OCAMLC=ocamlc
-OCAMLDEP=ocamldep
-OCAMLFIND=ocamlfind
+include ../Makefile.common
 
 CAMLCFLAGS=-I ../src -I +compiler-libs \
            -w +a-4-9-41-42-44-45-48 -warn-error +A \
@@ -20,8 +18,6 @@ num_top.cma: $(CMOS)
 
 TOINSTALL=\
   num_top.cma num_top.cmi num_top_printers.cmi
-
-VERSION=$(shell sed -ne 's/^ *version *: *"\([^"]*\)".*$$/\1/p' ../num.opam)
 
 install:
 	sed -e 's/%%VERSION%%/$(VERSION)/g' META.in > META

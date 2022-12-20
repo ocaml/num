@@ -1,24 +1,6 @@
-OCAMLC=ocamlc
-OCAMLOPT=ocamlopt
-OCAMLDEP=ocamldep
-OCAMLMKLIB=ocamlmklib
-OCAMLFIND=ocamlfind
-INSTALL_DATA=install -m 644
-INSTALL_DLL=install
-INSTALL_DIR=install -d
-STDLIBDIR=$(shell $(OCAMLC) -where)
+include ../Makefile.common
+
 DESTDIR ?=
-
-include $(STDLIBDIR)/Makefile.config
-
-ifeq "$(NATIVE_COMPILER)" ""
-# $(NATIVE_COMPILER) was added in 4.09: use $(ARCH) for 4.06-4.08
-ifeq "$(ARCH)" "none"
-NATIVE_COMPILER = false
-else
-NATIVE_COMPILER = true
-endif
-endif
 
 ifeq "$(filter i386 amd64 arm64 power,$(ARCH))" ""
 # Unsupported architecture
@@ -91,8 +73,6 @@ TOINSTALL_STUBS=dllnums$(EXT_DLL)
 else
 TOINSTALL_STUBS=
 endif
-
-VERSION=$(shell sed -ne 's/^ *version *: *"\([^"]*\)".*$$/\1/p' ../num.opam)
 
 install:
 	$(INSTALL_DIR) $(DESTDIR)$(STDLIBDIR)
