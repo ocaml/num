@@ -6,7 +6,8 @@ Release Next
   testsuite via opam.
 - Pull request #25: remove all uses of globally-allocated, mutable temporaries,
   making the Num library thread-safe and domain-safe.
-- Issue #26, pull request #27: improve dune file. 
+- Issue #26, pull request #27: improve dune file.
+- Pull request #30: fix bytecode-only build for OCaml >= 4.12.
 
 Release 1.4 (2020-11-09)
 
