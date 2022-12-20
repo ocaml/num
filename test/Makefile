@@ -9,7 +9,7 @@ all:: test.byt
 	@echo "----- Testing in bytecode..."
 	$(OCAMLRUN) -I ../src ./test.byt
 
-ifeq "$(filter false,$(NATIVE_COMPILER))$(filter none,$(ARCH))" ""
+ifeq "$(NATIVE_COMPILER)" "true"
 all:: test.exe
 	@echo "----- Testing in native code..."
 	./test.exe
