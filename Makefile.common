@@ -4,14 +4,14 @@ OCAMLDEP=ocamldep
 OCAMLMKLIB=ocamlmklib
 OCAMLFIND=ocamlfind
 OCAMLRUN=ocamlrun
-STDLIBDIR=$(shell $(OCAMLC) -where)
+STDLIBDIR:=$(shell $(OCAMLC) -where)
 VERSION=$(shell sed -ne 's/^ *version *: *"\([^"]*\)".*$$/\1/p' ../num.opam)
 
 INSTALL_DATA=install -m 644
 INSTALL_DLL=install
 INSTALL_DIR=install -d
 
-include $(shell $(OCAMLC) -where)/Makefile.config
+include $(STDLIBDIR)/Makefile.config
 
 ifeq "$(NATIVE_COMPILER)" ""
 # $(NATIVE_COMPILER) was added in 4.09: use $(ARCH) for 4.06-4.08
