@@ -1,15 +1,6 @@
-OCAMLC=ocamlc
-OCAMLOPT=ocamlopt
-OCAMLDEP=ocamldep
-OCAMLMKLIB=ocamlmklib
-OCAMLFIND=ocamlfind
-INSTALL_DATA=install -m 644
-INSTALL_DLL=install
-INSTALL_DIR=install -d
-STDLIBDIR=$(shell $(OCAMLC) -where)
-DESTDIR ?=
+include ../Makefile.common
 
-include $(STDLIBDIR)/Makefile.config
+DESTDIR ?=
 
 ifeq "$(filter i386 amd64 arm64 power,$(ARCH))" ""
 # Unsupported architecture
@@ -33,7 +24,7 @@ COBJS=bng.$(O) nat_stubs.$(O)
 
 all:: libnums.$(A) nums.cma
 
-ifneq "$(ARCH)" "none"
+ifeq "$(NATIVE_COMPILER)" "true"
 all:: nums.cmxa
 endif
 
@@ -71,7 +62,7 @@ nat_stubs.$(O): bng.h nat.h
 # is installed via findlib
 
 TOINSTALL=nums.cma libnums.$(A) $(CMIS) $(CMIS:.cmi=.mli) $(CMIS:.cmi=.cmti)
-ifneq "$(ARCH)" "none"
+ifeq "$(NATIVE_COMPILER)" "true"
 TOINSTALL+=nums.cmxa nums.$(A) $(CMXS)
 endif
 ifeq "$(NATDYNLINK)" "true"
@@ -82,8 +73,6 @@ TOINSTALL_STUBS=dllnums$(EXT_DLL)
 else
 TOINSTALL_STUBS=
 endif
-
-VERSION=$(shell sed -ne 's/^ *version *: *"\([^"]*\)".*$$/\1/p' ../num.opam)
 
 install:
 	$(INSTALL_DIR) $(DESTDIR)$(STDLIBDIR)

@@ -1,8 +1,4 @@
-OCAMLC=ocamlc
-OCAMLOPT=ocamlopt
-OCAMLRUN=ocamlrun
-
-include $(shell $(OCAMLC) -where)/Makefile.config
+include ../Makefile.common
 
 CAMLCFLAGS=
 CAMLOPTFLAGS=$(CAMLCFLAGS)
@@ -13,7 +9,7 @@ all:: test.byt
 	@echo "----- Testing in bytecode..."
 	$(OCAMLRUN) -I ../src ./test.byt
 
-ifneq "$(ARCH)" "none"
+ifeq "$(NATIVE_COMPILER)" "true"
 all:: test.exe
 	@echo "----- Testing in native code..."
 	./test.exe
