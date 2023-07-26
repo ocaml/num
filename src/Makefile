@@ -116,9 +116,9 @@ TOINSTALL_NUM_TOP=num_top.cma $(addsuffix .cmi,$(MODULES_NUM_TOP))
 # lib_root section
 #   - num-top files (legacy and modern)
 #   - num artefacts to ocaml/ (legacy only)
-#   - dllnums.so to ocaml/stublibs/ (legacy only)
 # libexec_root section
 #   - nums.cmxs (legacy only)
+#   - dllnums.so to ocaml/stublibs/ (legacy only)
 # lib section:
 #   - num META file
 #   - num artefacts (modern only)
@@ -135,12 +135,10 @@ $(foreach file,$(TOINSTALL_NUM_TOP),
 ifeq "$(1)" "legacy"
 $(foreach file,$(TOINSTALL),
 	@echo '  "src/$(file)" {"ocaml/$(file)"}' >> $$@)
-ifneq "$(TOINSTALL_CMXS)" ""
+	@echo ']' >> $$@
 	@echo 'libexec_root: [' >> $$@
 $(foreach file,$(TOINSTALL_CMXS),
 	@echo '  "src/$(file)" {"ocaml/$(file)"}' >> $$@)
-	@echo ']' >> $$@
-endif
 $(foreach file,$(TOINSTALL_STUBS),
 	@echo '  "src/$(file)" {"ocaml/stublibs/$(file)"}' >> $$@)
 endif
@@ -151,12 +149,10 @@ ifeq "$(1)" "modern"
 $(foreach file,$(TOINSTALL),
 	@echo '  "src/$(file)"' >> $$@)
 	@echo ']' >> $$@
-ifneq "$(TOINSTALL_CMXS)" ""
 	@echo 'libexec: [' >> $$@
 $(foreach file,$(TOINSTALL_CMXS),
 	@echo '  "src/$(file)"' >> $$@)
 	@echo ']' >> $$@
-endif
 	@echo 'stublibs: [' >> $$@
 $(foreach file,$(TOINSTALL_STUBS),
 	@echo '  "src/$(file)"' >> $$@)
@@ -172,7 +168,10 @@ install: num-top-install
 	cp META.legacy META
 	$(OCAMLFIND) install num META
 	rm -f META
-	$(INSTALL_DATA) $(TOINSTALL) $(TOINSTALL_CMXS) $(DESTDIR)$(STDLIBDIR)
+	$(INSTALL_DATA) $(TOINSTALL) $(DESTDIR)$(STDLIBDIR)
+ifeq "$(NATDYNLINK)" "true"
+	$(INSTALL_DLL) $(TOINSTALL_CMXS) $(DESTDIR)$(STDLIBDIR)
+endif
 ifeq "$(SUPPORTS_SHARED_LIBRARIES)" "true"
 	$(INSTALL_DIR) $(DESTDIR)$(STDLIBDIR)/stublibs
 	$(INSTALL_DLL) $(TOINSTALL_STUBS) $(DESTDIR)$(STDLIBDIR)/stublibs
