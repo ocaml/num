@@ -101,7 +101,9 @@ ifeq "$(NATIVE_COMPILER)" "true"
 TOINSTALL+=nums.cmxa nums.$(A) $(CMXS)
 endif
 ifeq "$(NATDYNLINK)" "true"
-TOINSTALL+=nums.cmxs
+TOINSTALL_CMXS=nums.cmxs
+else
+TOINSTALL_CMXS=
 endif
 ifeq "$(SUPPORTS_SHARED_LIBRARIES)" "true"
 TOINSTALL_STUBS=dllnums$(EXT_DLL)
@@ -114,10 +116,14 @@ TOINSTALL_NUM_TOP=num_top.cma $(addsuffix .cmi,$(MODULES_NUM_TOP))
 # lib_root section
 #   - num-top files (legacy and modern)
 #   - num artefacts to ocaml/ (legacy only)
+# libexec_root section
+#   - nums.cmxs (legacy only)
 #   - dllnums.so to ocaml/stublibs/ (legacy only)
 # lib section:
 #   - num META file
 #   - num artefacts (modern only)
+# libexec section:
+#   - nums.cmxs (modern only)
 # stublibs section:
 #   - dllnums.so (modern only)
 define GENERATE_INSTALL_FILE
@@ -129,6 +135,10 @@ $(foreach file,$(TOINSTALL_NUM_TOP),
 ifeq "$(1)" "legacy"
 $(foreach file,$(TOINSTALL),
 	@echo '  "src/$(file)" {"ocaml/$(file)"}' >> $$@)
+	@echo ']' >> $$@
+	@echo 'libexec_root: [' >> $$@
+$(foreach file,$(TOINSTALL_CMXS),
+	@echo '  "src/$(file)" {"ocaml/$(file)"}' >> $$@)
 $(foreach file,$(TOINSTALL_STUBS),
 	@echo '  "src/$(file)" {"ocaml/stublibs/$(file)"}' >> $$@)
 endif
@@ -137,6 +147,10 @@ endif
 	@echo '  "src/META.$(1)" {"META"}' >> $$@
 ifeq "$(1)" "modern"
 $(foreach file,$(TOINSTALL),
+	@echo '  "src/$(file)"' >> $$@)
+	@echo ']' >> $$@
+	@echo 'libexec: [' >> $$@
+$(foreach file,$(TOINSTALL_CMXS),
 	@echo '  "src/$(file)"' >> $$@)
 	@echo ']' >> $$@
 	@echo 'stublibs: [' >> $$@
@@ -155,6 +169,9 @@ install: num-top-install
 	$(OCAMLFIND) install num META
 	rm -f META
 	$(INSTALL_DATA) $(TOINSTALL) $(DESTDIR)$(STDLIBDIR)
+ifeq "$(NATDYNLINK)" "true"
+	$(INSTALL_DLL) $(TOINSTALL_CMXS) $(DESTDIR)$(STDLIBDIR)
+endif
 ifeq "$(SUPPORTS_SHARED_LIBRARIES)" "true"
 	$(INSTALL_DIR) $(DESTDIR)$(STDLIBDIR)/stublibs
 	$(INSTALL_DLL) $(TOINSTALL_STUBS) $(DESTDIR)$(STDLIBDIR)/stublibs
@@ -167,7 +184,7 @@ num-top-install:
 
 findlib-install: num-top-install
 	cp META.modern META
-	$(OCAMLFIND) install num META $(TOINSTALL) $(TOINSTALL_STUBS)
+	$(OCAMLFIND) install num META $(TOINSTALL) $(TOINSTALL_CMXS) $(TOINSTALL_STUBS)
 	rm -f META
 
 num-top-uninstall:
@@ -177,7 +194,7 @@ findlib-uninstall: num-top-uninstall
 	$(OCAMLFIND) remove num
 
 uninstall: findlib-uninstall
-	cd $(DESTDIR)$(STDLIBDIR) && rm -f $(TOINSTALL)
+	cd $(DESTDIR)$(STDLIBDIR) && rm -f $(TOINSTALL) $(TOINSTALL_CMXS)
 ifeq "$(SUPPORTS_SHARED_LIBRARIES)" "true"
 	cd $(DESTDIR)$(STDLIBDIR)/stublibs && rm -f $(TOINSTALL_STUBS)
 endif
