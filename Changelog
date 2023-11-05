@@ -7,7 +7,12 @@ Release Next
 - Pull request #25: remove all uses of globally-allocated, mutable temporaries,
   making the Num library thread-safe and domain-safe.
 - Issue #26, pull request #27: improve dune file.
+- Pull request #29: improve OPAM installation.
 - Pull request #30: fix bytecode-only build for OCaml >= 4.12.
+- Pull request #33: always install nums.cmxs with executable bit set.
+- Pull request #35: implement Nat.length_nat as an external primitive
+  (instead of an Obj-based hack) to facilitate Wasm_of_OCaml support.
+
 
 Release 1.4 (2020-11-09)
 
