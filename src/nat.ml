@@ -67,7 +67,7 @@ external lxor_digit_nat: nat -> int -> nat -> int -> unit = "lxor_digit_nat"
 external initialize_nat: unit -> unit = "initialize_nat"
 let _ = initialize_nat()
 
-let length_nat (n : nat) = Obj.size (Obj.repr n) - 1
+external length_nat : nat -> int = "length_nat" [@@noalloc]
 
 let length_of_digit = Sys.word_size;;
 
