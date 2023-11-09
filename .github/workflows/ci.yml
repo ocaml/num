@@ -16,13 +16,13 @@ jobs:
         ocaml-version:
           - 4.06.x
           - 4.14.x
-          - 5.0.x
-          - ocaml-variants.5.1.0+trunk
+          - 5.1.x
+          - ocaml-variants.5.2.0+trunk
         exclude:
           - os: windows-latest
-            ocaml-version: ocaml-variants.5.1.0+trunk
+            ocaml-version: ocaml-variants.5.2.0+trunk
           - os: windows-latest
-            ocaml-version: 5.0.x
+            ocaml-version: 5.1.x
 
     runs-on: ${{ matrix.os }}
 
@@ -34,6 +34,7 @@ jobs:
         uses: ocaml/setup-ocaml@v2
         with:
           ocaml-compiler: ${{ matrix.ocaml-version }}
+          allow-prelease-opam: true
 
       # Dune (may fail with trunk)
       - name: Install dune, if possible
