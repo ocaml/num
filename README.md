@@ -42,7 +42,7 @@ More documentation on the functions provided in this library can be found in _Th
 
 Prerequisites: OCaml version 4.04 or newer.
 ```
-        make all
+        make all PROFILE=release
         make test
         make install
         make clean

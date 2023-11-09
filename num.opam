@@ -11,7 +11,8 @@ homepage: "https://github.com/ocaml/num/"
 bug-reports: "https://github.com/ocaml/num/issues"
 dev-repo: "git+https://github.com/ocaml/num.git"
 build: [
-  [make "opam-legacy" {!ocaml:preinstalled & ocaml:version < "5.0.0~~"}
+  [make "PROFILE=release"
+        "opam-legacy" {!ocaml:preinstalled & ocaml:version < "5.0.0~~"}
         "opam-modern" {ocaml:preinstalled | ocaml:version >= "5.0.0~~"}]
   [make "test"] {with-test}
 ]

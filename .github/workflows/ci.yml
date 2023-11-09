@@ -47,7 +47,7 @@ jobs:
       - run: opam pin add num . --no-action
 
       # Check building with make
-      - run: opam exec -- make
+      - run: opam exec -- make PROFILE=dev
       - run: opam exec -- make test
       - run: opam exec -- make clean
 
