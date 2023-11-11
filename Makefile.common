@@ -21,3 +21,29 @@ else
 NATIVE_COMPILER = true
 endif
 endif
+
+# PROFILE=dev or PROFILE=release
+PROFILE ?= auto
+
+# Assume we're in release mode if there's no .git directory (means that an old
+# school installation from a tarball assumes release mode, but a Git clone
+# assumes development mode)
+ifeq "$(PROFILE)" "auto"
+# This file is included from a sub-directory, hence the ../
+ifeq "$(wildcard ../.git)" ""
+PROFILE = release
+else
+PROFILE = dev
+endif
+endif
+
+ifneq "$(filter-out release dev, $(PROFILE))$(word 2, $(PROFILE))" ""
+$(error The PROFILE variable must be one of auto, dev, or release)
+endif
+
+# Only use -warn-error in dev mode
+ifeq "$(PROFILE)" "dev"
+WARN_ERROR = -warn-error +A
+else
+WARN_ERROR =
+endif
