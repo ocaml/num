@@ -12,7 +12,7 @@ Release Next
 - Pull request #33: always install nums.cmxs with executable bit set.
 - Pull request #35: implement Nat.length_nat as an external primitive
   (instead of an Obj-based hack) to facilitate Wasm_of_OCaml support.
-
+- Pull request #38: don't build with `-warn-error +A` for releases.
 
 Release 1.4 (2020-11-09)
 
