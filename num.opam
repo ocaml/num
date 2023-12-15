@@ -1,5 +1,5 @@
 opam-version: "2.0"
-version: "1.5~dev"
+version: "1.6~dev"
 maintainer: "Xavier Leroy <xavier.leroy@inria.fr>"
 authors: [
   "Valérie Ménissier-Morain"
