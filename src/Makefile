@@ -42,16 +42,12 @@ META.top: META.num-top.in
 	echo 'version = "$(VERSION)"' > $@
 	cat $^ >> $@
 
-META.%:
+META.modern:
 	@echo 'requires = "num.core"' > $@
 	@echo 'requires(toploop) = "num.core,num-top"' >> $@
 	@echo 'version = "$(VERSION)"' >> $@
 	@echo 'description = "Arbitrary-precision rational arithmetic"' >> $@
 	@echo 'package "core" (' >> $@
-# META.legacy installs num to the OCaml standard library directory so requires
-# the extra directory line. META.modern installs num as a standard findlib
-# package.
-	@echo '  directory = "^"' >> $(if $(*:legacy=),/dev/null,$@)
 	@echo '  version = "$(VERSION)"' >> $@
 	@echo '  browse_interfaces = ""' >> $@
 	@echo '  archive(byte) = "nums.cma"' >> $@
@@ -63,6 +59,9 @@ ifeq "$(NATDYNLINK)" "true"
 	@echo '  plugin(native) = "nums.cmxs"' >> $@
 endif
 	@echo ')' >> $@
+
+META.legacy: META.modern
+	cp $< $@
 
 libnums.$(A): $(COBJS)
 	$(OCAMLMKLIB) -oc nums $(COBJS)
@@ -144,7 +143,7 @@ $(foreach file,$(TOINSTALL_STUBS),
 endif
 	@echo ']' >> $$@
 	@echo 'lib: [' >> $$@
-	@echo '  "src/META.$(1)" {"META"}' >> $$@
+	@echo '  "src/META.modern" {"META"}' >> $$@
 $(foreach file,$(TOINSTALL),
 	@echo '  "src/$(file)"' >> $$@)
 	@echo ']' >> $$@
