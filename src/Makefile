@@ -121,11 +121,11 @@ TOINSTALL_NUM_TOP=num_top.cma $(addsuffix .cmi,$(MODULES_NUM_TOP))
 #   - dllnums.so to ocaml/stublibs/ (legacy only)
 # lib section:
 #   - num META file
-#   - num artefacts (modern only)
+#   - num artefacts
 # libexec section:
 #   - nums.cmxs (modern only)
 # stublibs section:
-#   - dllnums.so (modern only)
+#   - dllnums.so
 define GENERATE_INSTALL_FILE
 num-$1.install:
 	@echo 'lib_root: [' > $$@
@@ -145,7 +145,6 @@ endif
 	@echo ']' >> $$@
 	@echo 'lib: [' >> $$@
 	@echo '  "src/META.$(1)" {"META"}' >> $$@
-ifeq "$(1)" "modern"
 $(foreach file,$(TOINSTALL),
 	@echo '  "src/$(file)"' >> $$@)
 	@echo ']' >> $$@
@@ -156,7 +155,6 @@ $(foreach file,$(TOINSTALL_CMXS),
 	@echo 'stublibs: [' >> $$@
 $(foreach file,$(TOINSTALL_STUBS),
 	@echo '  "src/$(file)"' >> $$@)
-endif
 	@echo ']' >> $$@
 endef
 
