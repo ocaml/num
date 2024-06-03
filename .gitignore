@@ -9,8 +9,7 @@
 *.cmti
 *.annot
 src/META.top
-src/META.modern
-src/META.legacy
+src/META.num
 src/META
 src/num_top*.ml*
 test/test.byt

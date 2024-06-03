@@ -27,7 +27,7 @@ SOURCES_NUM_TOP=\
   $(addsuffix .mli,$(MODULES_NUM_TOP)) $(addsuffix .ml,$(MODULES_NUM_TOP))
 CMOS_NUM_TOP=$(addsuffix .cmo,$(MODULES_NUM_TOP))
 
-all:: libnums.$(A) nums.cma num_top.cma META.legacy META.modern META.top \
+all:: libnums.$(A) nums.cma num_top.cma META.num META.top \
       num-legacy.install num-modern.install
 
 ifeq "$(NATIVE_COMPILER)" "true"
@@ -42,7 +42,7 @@ META.top: META.num-top.in
 	echo 'version = "$(VERSION)"' > $@
 	cat $^ >> $@
 
-META.modern:
+META.num:
 	@echo 'requires = "num.core"' > $@
 	@echo 'requires(toploop) = "num.core,num-top"' >> $@
 	@echo 'version = "$(VERSION)"' >> $@
@@ -59,9 +59,6 @@ ifeq "$(NATDYNLINK)" "true"
 	@echo '  plugin(native) = "nums.cmxs"' >> $@
 endif
 	@echo ')' >> $@
-
-META.legacy: META.modern
-	cp $< $@
 
 libnums.$(A): $(COBJS)
 	$(OCAMLMKLIB) -oc nums $(COBJS)
@@ -143,7 +140,7 @@ $(foreach file,$(TOINSTALL_STUBS),
 endif
 	@echo ']' >> $$@
 	@echo 'lib: [' >> $$@
-	@echo '  "src/META.modern" {"META"}' >> $$@
+	@echo '  "src/META.num" {"META"}' >> $$@
 $(foreach file,$(TOINSTALL),
 	@echo '  "src/$(file)"' >> $$@)
 	@echo ']' >> $$@
@@ -162,7 +159,7 @@ $(eval $(call GENERATE_INSTALL_FILE,modern))
 
 install: num-top-install
 	$(INSTALL_DIR) $(DESTDIR)$(STDLIBDIR)
-	cp META.legacy META
+	cp META.num META
 	$(OCAMLFIND) install num META
 	rm -f META
 	$(INSTALL_DATA) $(TOINSTALL) $(DESTDIR)$(STDLIBDIR)
@@ -180,7 +177,7 @@ num-top-install:
 	rm -f META
 
 findlib-install: num-top-install
-	cp META.modern META
+	cp META.num META
 	$(OCAMLFIND) install num META $(TOINSTALL) $(TOINSTALL_CMXS) $(TOINSTALL_STUBS)
 	rm -f META
 
@@ -198,7 +195,7 @@ endif
 
 clean:
 	rm -f *.cm[ioxta] *.cmx[as] *.cmti *.$(O) *.$(A) *$(EXT_DLL) \
-        META.top META.legacy META.modern $(SOURCES_NUM_TOP) \
+        META.top META.num $(SOURCES_NUM_TOP) \
         num-legacy.install num-modern.install
 
 $(SOURCES_NUM_TOP:num_=%): $(addprefix ../toplevel/,$(SOURCES_NUM_TOP))
