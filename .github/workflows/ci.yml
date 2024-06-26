@@ -14,15 +14,10 @@ jobs:
           - ubuntu-latest
           - windows-latest
         ocaml-version:
-          - 4.06.x
-          - 4.14.x
-          - 5.2.x
-          - ocaml-variants.5.3.0+trunk
-        exclude:
-          - os: windows-latest
-            ocaml-version: ocaml-variants.5.2.0+trunk
-          - os: windows-latest
-            ocaml-version: 5.1.x
+          - "4.06"
+          - "4.14"
+          - "5.2"
+          - "ocaml-variants.5.3.0+trunk"
 
     runs-on: ${{ matrix.os }}
 
@@ -31,7 +26,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Set-up OCaml ${{ matrix.ocaml-version }}
-        uses: ocaml/setup-ocaml@v2
+        uses: ocaml/setup-ocaml@v3.0.0-beta
         with:
           ocaml-compiler: ${{ matrix.ocaml-version }}
           allow-prerelease-opam: true
