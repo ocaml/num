@@ -114,7 +114,6 @@ TOINSTALL_NUM_TOP=num_top.cma $(addsuffix .cmi,$(MODULES_NUM_TOP))
 #   - num artefacts to ocaml/ (legacy only)
 # libexec_root section
 #   - nums.cmxs (legacy only)
-#   - dllnums.so to ocaml/stublibs/ (legacy only)
 # lib section:
 #   - num META file
 #   - num artefacts
@@ -135,8 +134,6 @@ $(foreach file,$(TOINSTALL),
 	@echo 'libexec_root: [' >> $$@
 $(foreach file,$(TOINSTALL_CMXS),
 	@echo '  "src/$(file)" {"ocaml/$(file)"}' >> $$@)
-$(foreach file,$(TOINSTALL_STUBS),
-	@echo '  "src/$(file)" {"ocaml/stublibs/$(file)"}' >> $$@)
 endif
 	@echo ']' >> $$@
 	@echo 'lib: [' >> $$@
