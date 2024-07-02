@@ -1,6 +1,8 @@
 name: CI
 
-on: [push, pull_request]
+on:
+  - push
+  - pull_request
 
 jobs:
   build:
@@ -28,14 +30,13 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     steps:
-      - name: Checkout code
+      - name: Checkout tree
         uses: actions/checkout@v4
 
       - name: Set-up OCaml ${{ matrix.ocaml-version }}
-        uses: ocaml/setup-ocaml@v3.0.0-beta
+        uses: ocaml/setup-ocaml@v3
         with:
           ocaml-compiler: ${{ matrix.ocaml-version }}
-          allow-prerelease-opam: true
 
       # Dune (may fail with trunk)
       - name: Install dune, if possible
@@ -45,7 +46,6 @@ jobs:
 
       # Dependencies
       - run: opam install . --deps-only --with-doc --with-test
-      - run: opam pin add num . --no-action
 
       # Check building with make
       - run: opam exec -- make PROFILE=dev
