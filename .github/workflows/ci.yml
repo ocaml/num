@@ -34,7 +34,6 @@ jobs:
         uses: ocaml/setup-ocaml@v3
         with:
           ocaml-compiler: ${{ matrix.ocaml-version }}
-          allow-prerelease-opam: true
 
       # Dune (may fail with trunk)
       - name: Install dune, if possible
