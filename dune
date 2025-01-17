@@ -1,0 +1,16 @@
+(rule (with-stdout-to warnings.sexp (echo
+; Add any warnings to this string (-warn-error +A is appended for the dev
+; profile)
+  "(-w +a-4-9-41-42-44-45-48)"
+)))
+
+(rule (with-stdout-to flags.sexp (echo
+; Add any compilation flags to this string
+  "(-safe-string -strict-sequence -strict-formats)"
+)))
+
+(env
+  (dev
+    (flags (:include warnings.sexp) -warn-error +A (:include flags.sexp)))
+  (release
+    (flags (:include warnings.sexp) (:include flags.sexp))))

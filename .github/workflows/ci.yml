@@ -14,24 +14,24 @@ jobs:
           - ubuntu-latest
           - windows-latest
         ocaml-version:
-          - 4.06.x
-          - 4.14.x
-          - 5.1.x
-          - ocaml-variants.5.2.0+trunk
-        exclude:
-          - os: windows-latest
-            ocaml-version: ocaml-variants.5.2.0+trunk
-          - os: windows-latest
-            ocaml-version: 5.1.x
+          - "4.14"
+          - "5.3"
+        include:
+          - os: ubuntu-latest
+            ocaml-version: "4.06"
+          - os: macos-13
+            ocaml-version: "4.06"
+          - os: macos-latest
+            ocaml-version: "4.10"
 
     runs-on: ${{ matrix.os }}
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Set-up OCaml ${{ matrix.ocaml-version }}
-        uses: ocaml/setup-ocaml@v2
+        uses: ocaml/setup-ocaml@v3
         with:
           ocaml-compiler: ${{ matrix.ocaml-version }}
 
@@ -46,7 +46,7 @@ jobs:
       - run: opam pin add num . --no-action
 
       # Check building with make
-      - run: opam exec -- make
+      - run: opam exec -- make PROFILE=dev
       - run: opam exec -- make test
       - run: opam exec -- make clean
 

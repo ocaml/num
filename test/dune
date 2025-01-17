@@ -9,7 +9,8 @@
 (library
   (name test_lib)
   (modules test test_nats test_big_ints test_ratios test_nums test_io end_test)
-  (libraries num))
+  (libraries num)
+  (flags ))
 
 (executable
   (name driver)

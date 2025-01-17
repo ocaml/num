@@ -9,7 +9,7 @@ else
 BNG_ARCH=$(ARCH)
 endif
 
-CAMLCFLAGS=-w +a-4-9-41-42-44-45-48 -warn-error +A -bin-annot -g \
+CAMLCFLAGS=-w +a-4-9-41-42-44-45-48 $(WARN_ERROR) -bin-annot -g \
           -safe-string -strict-sequence -strict-formats -I +compiler-libs
 CAMLOPTFLAGS=$(CAMLCFLAGS)
 ifeq "$(FLAMBDA)" "true"
@@ -27,7 +27,7 @@ SOURCES_NUM_TOP=\
   $(addsuffix .mli,$(MODULES_NUM_TOP)) $(addsuffix .ml,$(MODULES_NUM_TOP))
 CMOS_NUM_TOP=$(addsuffix .cmo,$(MODULES_NUM_TOP))
 
-all:: libnums.$(A) nums.cma num_top.cma META.legacy META.modern META.top \
+all:: libnums.$(A) nums.cma num_top.cma META.num META.top \
       num-legacy.install num-modern.install
 
 ifeq "$(NATIVE_COMPILER)" "true"
@@ -42,16 +42,12 @@ META.top: META.num-top.in
 	echo 'version = "$(VERSION)"' > $@
 	cat $^ >> $@
 
-META.%:
+META.num:
 	@echo 'requires = "num.core"' > $@
 	@echo 'requires(toploop) = "num.core,num-top"' >> $@
 	@echo 'version = "$(VERSION)"' >> $@
 	@echo 'description = "Arbitrary-precision rational arithmetic"' >> $@
 	@echo 'package "core" (' >> $@
-# META.legacy installs num to the OCaml standard library directory so requires
-# the extra directory line. META.modern installs num as a standard findlib
-# package.
-	@echo '  directory = "^"' >> $(if $(*:legacy=),/dev/null,$@)
 	@echo '  version = "$(VERSION)"' >> $@
 	@echo '  browse_interfaces = ""' >> $@
 	@echo '  archive(byte) = "nums.cma"' >> $@
@@ -118,14 +114,13 @@ TOINSTALL_NUM_TOP=num_top.cma $(addsuffix .cmi,$(MODULES_NUM_TOP))
 #   - num artefacts to ocaml/ (legacy only)
 # libexec_root section
 #   - nums.cmxs (legacy only)
-#   - dllnums.so to ocaml/stublibs/ (legacy only)
 # lib section:
 #   - num META file
-#   - num artefacts (modern only)
+#   - num artefacts
 # libexec section:
 #   - nums.cmxs (modern only)
 # stublibs section:
-#   - dllnums.so (modern only)
+#   - dllnums.so
 define GENERATE_INSTALL_FILE
 num-$1.install:
 	@echo 'lib_root: [' > $$@
@@ -139,13 +134,10 @@ $(foreach file,$(TOINSTALL),
 	@echo 'libexec_root: [' >> $$@
 $(foreach file,$(TOINSTALL_CMXS),
 	@echo '  "src/$(file)" {"ocaml/$(file)"}' >> $$@)
-$(foreach file,$(TOINSTALL_STUBS),
-	@echo '  "src/$(file)" {"ocaml/stublibs/$(file)"}' >> $$@)
 endif
 	@echo ']' >> $$@
 	@echo 'lib: [' >> $$@
-	@echo '  "src/META.$(1)" {"META"}' >> $$@
-ifeq "$(1)" "modern"
+	@echo '  "src/META.num" {"META"}' >> $$@
 $(foreach file,$(TOINSTALL),
 	@echo '  "src/$(file)"' >> $$@)
 	@echo ']' >> $$@
@@ -156,7 +148,6 @@ $(foreach file,$(TOINSTALL_CMXS),
 	@echo 'stublibs: [' >> $$@
 $(foreach file,$(TOINSTALL_STUBS),
 	@echo '  "src/$(file)"' >> $$@)
-endif
 	@echo ']' >> $$@
 endef
 
@@ -165,7 +156,7 @@ $(eval $(call GENERATE_INSTALL_FILE,modern))
 
 install: num-top-install
 	$(INSTALL_DIR) $(DESTDIR)$(STDLIBDIR)
-	cp META.legacy META
+	cp META.num META
 	$(OCAMLFIND) install num META
 	rm -f META
 	$(INSTALL_DATA) $(TOINSTALL) $(DESTDIR)$(STDLIBDIR)
@@ -183,7 +174,7 @@ num-top-install:
 	rm -f META
 
 findlib-install: num-top-install
-	cp META.modern META
+	cp META.num META
 	$(OCAMLFIND) install num META $(TOINSTALL) $(TOINSTALL_CMXS) $(TOINSTALL_STUBS)
 	rm -f META
 
@@ -201,7 +192,7 @@ endif
 
 clean:
 	rm -f *.cm[ioxta] *.cmx[as] *.cmti *.$(O) *.$(A) *$(EXT_DLL) \
-        META.top META.legacy META.modern $(SOURCES_NUM_TOP) \
+        META.top META.num $(SOURCES_NUM_TOP) \
         num-legacy.install num-modern.install
 
 $(SOURCES_NUM_TOP:num_=%): $(addprefix ../toplevel/,$(SOURCES_NUM_TOP))

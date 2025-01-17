@@ -1,0 +1,5 @@
+# Default behaviour, for if core.autocrlf isn't set
+* text=auto
+
+*.ml* linguist-language=OCaml
+Makefile* linguist-language=Makefile
