@@ -14,8 +14,6 @@
 
 *)
 
-open Longident
-
 let printers = [
   "nat_printer";
   "big_int_printer";
@@ -24,8 +22,9 @@ let printers = [
 ]
 
 let install_num_printer s =
-  Topdirs.dir_install_printer Format.err_formatter
-                              (Ldot(Lident "Num_top_printers", s))
+  match Longident.unflatten ["Num_top_printers"; s] with
+  | None -> assert false
+  | Some lid -> Topdirs.dir_install_printer Format.err_formatter lid
 
 let _ =
   List.iter install_num_printer printers
