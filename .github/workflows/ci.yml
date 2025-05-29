@@ -59,4 +59,5 @@ jobs:
         if: steps.dune.outcome == 'success'
 
       # Check installing with opam
-      - run: opam install --strict num
+      - run: opam lint .
+      - run: opam install num
