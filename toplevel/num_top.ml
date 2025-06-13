@@ -1,20 +1,17 @@
-(* Taken from findlib.  Findlib is copyright 1999 by Gerd Stolpmann and
-  distributed under the terms given in file LICENSE-findlib in this
-  directory. *)
-
-(*
-  Printers for types defined in the "num" library. Meant to be used as printers
-  in the ocaml toplevel. See num_top.mli.
-
-  Copyright (C) 2003  Stefano Zacchiroli <zack@debian.org>
-
-  Released under the same terms as findlib.
-
-  Simplified implementation for OCaml 4 and up, Xavier.Leroy@inria.fr
-
+(* Taken from the Zarith library.
+   It is distributed under LGPL 2 licensing, with static linking exception.
+   See the LICENSE file included in the distribution.
+   Contributed by Christophe Troestler.
+   Adapted to Num by Xavier Leroy.
 *)
 
-open Longident
+open Printf
+
+let eval_string
+      ?(print_outcome = false) ?(err_formatter = Format.err_formatter) str =
+  let lexbuf = Lexing.from_string str in
+  let phrase = !Toploop.parse_toplevel_phrase lexbuf in
+  Toploop.execute_phrase print_outcome err_formatter phrase
 
 let printers = [
   "nat_printer";
@@ -23,9 +20,9 @@ let printers = [
   "num_printer";
 ]
 
-let install_num_printer s =
-  Topdirs.dir_install_printer Format.err_formatter
-                              (Ldot(Lident "Num_top_printers", s))
-
-let _ =
-  List.iter install_num_printer printers
+let () =
+  let ok =
+    List.for_all
+      (fun p -> eval_string(sprintf "#install_printer Num_top_printers.%s;;" p))
+      printers in
+  if not ok then Format.eprintf "Problem installing Num printers@."
