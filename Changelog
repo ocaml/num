@@ -1,3 +1,8 @@
+Release 1.6 (2025-06-16)
+
+- #45, #46: fix incompatibility with OCaml 5.4
+- #40: always install to `lib`/`stublibs`, even in legacy mode
+
 Release 1.5 (2023-12-15)
 
 - Pull request #22: use `-warn-error +A` instead of `-warn-error A` to avoid
