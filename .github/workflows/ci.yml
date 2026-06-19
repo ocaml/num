@@ -1,13 +1,12 @@
 name: CI
 
-on: [push, pull_request]
+on: [push, pull_request, workflow_dispatch]
 
 jobs:
   build:
     strategy:
       fail-fast: false
       # Test Linux, macOS and Windows with the oldest and newest supported OCaml
-      # and trunk.
       matrix:
         os:
           - macos-latest
@@ -15,20 +14,16 @@ jobs:
           - windows-latest
         ocaml-version:
           - "4.14"
-          - "5.3"
+          - "5.4"
         include:
           - os: ubuntu-latest
-            ocaml-version: "4.06"
-          - os: macos-13
-            ocaml-version: "4.06"
-          - os: macos-latest
-            ocaml-version: "4.10"
+            ocaml-version: "4.11"
 
     runs-on: ${{ matrix.os }}
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Set-up OCaml ${{ matrix.ocaml-version }}
         uses: ocaml/setup-ocaml@v3
