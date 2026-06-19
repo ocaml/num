@@ -22,7 +22,7 @@ else
 NATIVE_COMPILER = true
 endif
 else
-# OCaml 4.x only set's NATIVE_COMPILER = false when --disable-native-compiler is
+# OCaml 4.x only sets NATIVE_COMPILER = false when --disable-native-compiler is
 # given explicitly. Legacy architectures not supported by the native compiler
 # then end up with NATIVE_COMPILER=true and ARCH=none
 ifeq "$(ARCH)" "none"
